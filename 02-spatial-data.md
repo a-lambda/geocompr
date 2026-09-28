@@ -12,15 +12,17 @@ We recommend not only reading the prose but also *running the code* in each chap
 
 To keep track of your learning journey, it may be worth starting by creating a new folder on your computer to save your R scripts, outputs and other things related to Geocomputation with R as you go.
 You can also [download](https://github.com/geocompx/geocompr/archive/refs/heads/main.zip) or [clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the [source code](https://github.com/geocompx/geocompr) underlying the book to support your learning.
-We strongly recommend installing an integrated development environment (IDE) such as [RStudio](https://posit.co/download/rstudio-desktop/#download) (recommended for most people) or [VS Code](https://github.com/REditorSupport/vscode-R) when writing/running/testing R code.^[
-We recommend using [RStudio projects](https://r4ds.had.co.nz/workflow-projects.html), [VS Code workspaces](https://code.visualstudio.com/docs/editor/workspaces) or similar system to manage your projects.
-A quick way to do this with RStudio is via the **rstudioapi** package.
-Open a new project called 'geocompr-learning' in your home directory with the following command from the R console in RStudio, for example: `rstudioapi::openProject("~/geocompr-learning")`.
-]
+We strongly recommend using R with an integrated development environment (IDE) such as [RStudio](https://posit.co/download/rstudio-desktop/#download)\index{RStudio} (quicker to get up and running) or [VS Code](https://github.com/REditorSupport/vscode-R)\index{VS Code} (which requires additional setup).
 
-If you are new to R, we recommend following introductory R resources such as [Hands on Programming with R](https://rstudio-education.github.io/hopr/starting.html) by Garrett Grolemund or an [Introduction to R](https://cengel.github.io/R-intro/) by Claudia Engel before you dive into Geocomputation with R code.
-Organize your work (e.g., with RStudio projects) and give scripts sensible names such as `chapter-02-notes.R` to document the code as you learn.
-\index{R!pre-requisites}
+If you are new to R, we recommend following introductory R resources such as [Hands on Programming with R](https://rstudio-education.github.io/hopr/starting.html) and [Introduction to R](https://cengel.github.io/R-intro/) before you dive into Geocomputation with R code.
+These resources cover in detail how to install R, which simply involves downloading the latest version from the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/).
+See the note below for more information on installing R for geocomputation on Mac and Linux.
+Organize your work into [projects](https://r4ds.had.co.nz/workflow-projects.html) and give scripts sensible names such as `chapter-02.R` (or equivalent RMarkdown or Quarto file names) to document the code as you learn.
+\index{R!prerequisites}
+
+\index{R!installation}
+\BeginKnitrBlock{rmdnote}<div class="rmdnote">Mac and Linux operating systems (OSs) have additional systems requirements, which can be found in the README of the [**sf** package](https://github.com/r-spatial/sf).
+See also OS-specific instructions such as that provided by the website [rtask.thinkr.fr](https://rtask.thinkr.fr/installation-of-r-4-2-on-ubuntu-22-04-lts-and-tips-for-spatial-packages/), which covers installing R on the open source OS Ubuntu.</div>\EndKnitrBlock{rmdnote}
 
 After you have got a good set-up, it's time to run some code!
 Unless you already have these packages installed, the first thing to do is to install foundational R packages used in this chapter, with the following commands:^[
@@ -28,45 +30,38 @@ Unless you already have these packages installed, the first thing to do is to in
 ]
 
 
-```r
+``` r
 install.packages("sf")
 install.packages("terra")
 install.packages("spData")
-install.packages("spDataLarge", repos = "https://nowosad.r-universe.dev")
+install.packages("spDataLarge", repos = "https://geocompr.r-universe.dev")
 ```
 
-<!-- toDo: explain (maybe also move tmapv4 to main) -->
 
 
-
-\index{R!installation}
-\BeginKnitrBlock{rmdnote}<div class="rmdnote">If you're running Mac or Linux, the previous command to install **sf** may not work first time.
-These operating systems (OSs) have 'systems requirements' that are described in the package's [README](https://github.com/r-spatial/sf).
-Other OS-specific instructions can be found online, including the article *Installation of R 4.2 on Ubuntu 22.04.1 LTS and tips for spatial packages* on the [rtask.thinkr.fr](https://rtask.thinkr.fr/installation-of-r-4-2-on-ubuntu-22-04-lts-and-tips-for-spatial-packages/) website.</div>\EndKnitrBlock{rmdnote}
-
-The packages needed to reproduce Part 1 of this book can be installed with the following command: `remotes::install_github("geocompx/geocompkg")`.
+The packages needed to reproduce Part I of this book can be installed with the following command: `remotes::install_github("geocompx/geocompkg")`.
 This command uses the function `install_packages()` from the **remotes** package to install source code hosted on the GitHub code hosting, version and collaboration platform.
 The following command will install **all** dependencies required to reproduce the entire book (warning: this may take several minutes): `remotes::install_github("geocompx/geocompkg", dependencies = TRUE)`.
 
 The packages needed to run the code presented in this chapter can be 'loaded' (technically they are attached) with the `library()` function as follows:
 
 
-```r
+``` r
 library(sf)            # classes and functions for vector data
-#> Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE
+#> Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE
 ```
 
 The output from `library(sf)` reports which versions of key geographic libraries such as GEOS the package is using, as outlined in Section \@ref(intro-sf).
 
 
-```r
+``` r
 library(terra)         # classes and functions for raster data
 ```
 
 The other packages that were installed contain data that will be used in the book:
 
 
-```r
+``` r
 library(spData)        # load geographic data
 library(spDataLarge)   # load larger geographic data
 ```
@@ -79,7 +74,7 @@ We will introduce the theory behind each data model and the disciplines in which
 The *vector data model* represents the world using points, lines and polygons.
 These have discrete, well-defined borders, meaning that vector datasets usually have a high level of precision (but not necessarily accuracy as we will see in Section \@ref(units)).
 The *raster data model* divides the surface up into cells of constant size.
-Raster datasets are the basis of background images used in web-mapping and have been a vital source of geographic data since the origins of aerial photography and satellite-based remote sensing devices.
+Raster datasets are the basis of background images used in web mapping and have been a vital source of geographic data since the origins of aerial photography and satellite-based remote sensing devices.
 Rasters aggregate spatially specific features to a given resolution, meaning that they are consistent over space and scalable (many worldwide raster datasets are available).
 
 Which to use?
@@ -88,7 +83,7 @@ The answer likely depends on your domain of application:
 - Vector data tends to dominate the social sciences because human settlements tend to have discrete borders
 - Raster dominates many environmental sciences partially because of the reliance on remote sensing data
 
-There is much overlap in some fields and raster and vector datasets can be used together:
+Both raster and vector datasets are used in many fields and raster and vector datasets can be used together:
 ecologists and demographers, for example, commonly use both vector and raster data.
 Furthermore, it is possible to convert between the two forms (see Chapter \@ref(raster-vector)).
 Whether your work involves more use of vector or raster datasets, it is worth understanding the underlying data model before using them, as discussed in subsequent chapters.
@@ -96,66 +91,66 @@ This book uses **sf** and **terra** packages to work with vector data and raster
 
 ## Vector data
 
-\BeginKnitrBlock{rmdnote}<div class="rmdnote">Take care when using the word 'vector' as it can have two meanings in this book:
+\BeginKnitrBlock{rmdnote}<div class="rmdnote">Take care when using the word 'vector', as it can have two meanings in this book:
 geographic vector data and the `vector` class (note the `monospace` font) in R.
 The former is a data model, the latter is an R class just like `data.frame` and `matrix`.
 Still, there is a link between the two: the spatial coordinates which are at the heart of the geographic vector data model can be represented in R using `vector` objects.</div>\EndKnitrBlock{rmdnote}
 
 The geographic vector data model\index{vector data model} is based on points located within a coordinate reference system\index{coordinate reference system|see {CRS}} (CRS\index{CRS}).
 Points can represent self-standing features (e.g., the location of a bus stop) or they can be linked together to form more complex geometries such as lines and polygons.
-Most point geometries contain only two dimensions (much less prominent 3-dimensional geometries contain an additional $z$ value, typically representing height above sea level).
+Most point geometries contain only two dimensions (much less prominent three-dimensional geometries contain an additional $z$ value, typically representing height above sea level).
 
 In this system, for example, London can be represented by the coordinates `c(-0.1, 51.5)`.
-This means that its location is -0.1 degrees east and 51.5 degrees north of the origin.
-The origin in this case is at 0 degrees longitude (the Prime Meridian) and 0 degrees latitude (the Equator) in a geographic ('lon/lat') CRS (Figure \@ref(fig:vectorplots), left panel).
+This means that its location is $-0.1$ degrees east and $51.5$ degrees north of the origin.
+The origin in this case is at 0 degrees longitude (Prime Meridian) and 0 degrees latitude (Equator) in a geographic ('lon/lat') CRS (Figure \@ref(fig:vectorplots), left panel).
 The same point could also be approximated in a projected CRS with 'Easting/Northing' values of `c(530000, 180000)` in the [British National Grid](https://en.wikipedia.org/wiki/Ordnance_Survey_National_Grid), meaning that London is located 530 km *East* and 180 km *North* of the $origin$ of the CRS.
 This can be verified visually: slightly more than 5 'boxes' --- square areas bounded by the gray grid lines 100 km in width --- separate the point representing London from the origin (Figure \@ref(fig:vectorplots), right panel).
 
-The location of National Grid's\index{National Grid} origin, in the sea beyond South West Peninsular, ensures that all locations in the UK have positive Easting and Northing values.^[
+The location of National Grid's\index{National Grid} origin, in the sea beyond the South West peninsula, ensures that all locations in the UK have positive Easting and Northing values.^[
 The origin we are referring to, depicted in blue in Figure \@ref(fig:vectorplots), is in fact the 'false' origin.
 The 'true' origin, the location at which distortions are at a minimum, is located at 2° W and 49° N.
 This was selected by the Ordnance Survey to be roughly in the center of the British landmass longitudinally.
 ]
-There is more to CRSs, as described in Section \@ref(crs-intro) and Chapter \@ref(reproj-geo-data) but, for the purposes of this section, it is sufficient to know that coordinates consist of two numbers representing distance from an origin, usually in $x$ then $y$ dimensions.
+There is more to CRSs, as described in Section \@ref(crs-intro) and Chapter \@ref(reproj-geo-data),
+For this section, it is sufficient to know that coordinates consist of two numbers representing distance from an origin, usually in $x$ then $y$ dimensions.
 
 
 
 <div class="figure" style="text-align: center">
-<img src="figures/vector_lonlat.png" alt="Illustration of vector (point) data in which the location of London (the red X) is represented with reference to an origin (the blue circle). The left plot represents a geographic CRS with an origin at 0° longitude and latitude. The right plot represents a projected CRS with an origin located in the sea west of the South West Peninsula." width="49%" /><img src="figures/vector_projected.png" alt="Illustration of vector (point) data in which the location of London (the red X) is represented with reference to an origin (the blue circle). The left plot represents a geographic CRS with an origin at 0° longitude and latitude. The right plot represents a projected CRS with an origin located in the sea west of the South West Peninsula." width="49%" />
-<p class="caption">(\#fig:vectorplots)Illustration of vector (point) data in which the location of London (the red X) is represented with reference to an origin (the blue circle). The left plot represents a geographic CRS with an origin at 0° longitude and latitude. The right plot represents a projected CRS with an origin located in the sea west of the South West Peninsula.</p>
+<img src="images/vector_lonlat.png" alt="Vector (point) data in which the location of London (red X) is represented with reference to an origin (blue circle). The left plot represents a geographic CRS with an origin at 0° longitude and latitude. The right plot represents a projected CRS with an origin located in the sea west of the South West Peninsula." width="49%" /><img src="images/vector_projected.png" alt="Vector (point) data in which the location of London (red X) is represented with reference to an origin (blue circle). The left plot represents a geographic CRS with an origin at 0° longitude and latitude. The right plot represents a projected CRS with an origin located in the sea west of the South West Peninsula." width="49%" />
+<p class="caption">(\#fig:vectorplots)Vector (point) data in which the location of London (red X) is represented with reference to an origin (blue circle). The left plot represents a geographic CRS with an origin at 0° longitude and latitude. The right plot represents a projected CRS with an origin located in the sea west of the South West Peninsula.</p>
 </div>
 
-The **sf** package provides classes for geographic vector data and a consistent command-line interface to important low level libraries for geocomputation:
+The **sf** package provides classes for geographic vector data and a consistent command line interface to important low-level libraries for geocomputation:
 
 - [GDAL](https://gdal.org/)\index{GDAL}, for reading, writing and manipulating a wide range of geographic data formats, covered in Chapter \@ref(read-write)
-- [PROJ](https://proj.org/), a powerful library for coordinate system transformations, which underlies the content covered in Chapter \@ref(reproj-geo-data) and \@ref(reproj-geo-data)
+- [PROJ](https://proj.org/), a powerful library for coordinate system transformations, which underlies the content covered in Chapter \@ref(reproj-geo-data)
 - [GEOS](https://libgeos.org/)\index{GEOS}, a planar geometry engine for operations such as calculating buffers and centroids on data with a projected CRS, covered in Chapter \@ref(geometry-operations)
-- [S2](https://s2geometry.io/), a spherical geometry engine written in C++ developed by Google, via the [**s2**](https://r-spatial.github.io/s2/) package, covered in Section \@ref(s2) below and in Chapter \@ref(reproj-geo-data)
-<!-- - [liblwgeom](https://github.com/postgis/postgis/tree/master/liblwgeom), a geometry engine used by PostGIS, via the [**lwgeom**](https://r-spatial.github.io/lwgeom/) package -->
+- [S2](https://s2geometry.io/)\index{S2}, a spherical geometry engine written in C++ developed by Google, via the [**s2**](https://r-spatial.github.io/s2/) package, covered in Section \@ref(s2) below and in Chapter \@ref(reproj-geo-data)
 
-Information about these interfaces is printed by **sf** the first time the package is loaded: the message  that appears below the `library(sf)` command at the beginning of this chapter tells us the versions of linked GEOS, GDAL and PROJ libraries (these vary between computers and over time) and whether or not the S2 interface is turned on.
-Nowadays, we take it for granted, however, only the tight integration with different geographic libraries makes reproducible geocomputation possible in the first place.
+Information about these interfaces is printed by **sf** the first time the package is loaded: the message  that appears below the `library(sf)` command at the beginning of this chapter tells us the versions of linked GEOS, GDAL and PROJ libraries (these vary between computers and over time) and whether or not the S2\index{S2} interface is turned on.
+We may take these low-level libraries for granted, but without their tight integration with languages such as R much reproducible geocomputation would be impossible.
 
-A neat feature of **sf** is that you can change the default geometry engine used on unprojected data: 'switching off' S2 can be done with the command `sf::sf_use_s2(FALSE)`, meaning that the planar geometry engine GEOS will be used by default for all geometry operations, including geometry operations on unprojected data.
-As we will see in Section \@ref(s2), planar geometry is based on 2 dimensional space.
-Planar geometry engines such as GEOS assume 'flat' (projected) coordinates while spherical geometry engines such as S2 assume unprojected (lon/lat) coordinates.
+A neat feature of **sf** is that you can change the default geometry engine used on unprojected data: 'switching off' S2\index{S2} can be done with the command `sf::sf_use_s2(FALSE)`, meaning that the planar geometry engine GEOS\index{GEOS} will be used by default for all geometry operations, including geometry operations on unprojected data.
+As we will see in Section \@ref(s2), planar geometry is based on two-dimensional space.
+Planar geometry engines such as GEOS assume 'flat' (projected) coordinates, while spherical geometry engines such as S2 assume unprojected (lon/lat) coordinates.
 
 This section introduces **sf** classes in preparation for subsequent chapters (Chapters \@ref(geometry-operations) and \@ref(read-write) cover the GEOS and GDAL interface, respectively).
 
-### An introduction to simple features {#intro-sf}
+### Introduction to simple features {#intro-sf}
 
-Simple features is an [open standard](http://portal.opengeospatial.org/files/?artifact_id=25355) developed and endorsed by the Open Geospatial Consortium (OGC), a not-for-profit organization whose activities we will revisit in a later chapter (in Section \@ref(file-formats)).
-\index{simple features |see {sf}}
+Simple features is an [open standard](http://portal.opengeospatial.org/files/?artifact_id=25355) developed and endorsed by the Open Geospatial Consortium (OGC), a not-for-profit organization whose activities we will revisit in a later chapter (Section \@ref(file-formats)).
+\index{simple features|see {sf}}
 Simple features is a hierarchical data model that represents a wide range of geometry types.
-Of 18 geometry types supported by the specification, only 7 are used in the vast majority of geographic research (see Figure \@ref(fig:sf-ogc));
+Of 18 geometry types supported by the specification, only seven are used in the vast majority of geographic research (see Figure \@ref(fig:sf-ogc));
 these core geometry types are fully supported by the R package **sf** [@pebesma_simple_2018].^[
-The full OGC standard includes rather exotic geometry types including 'surface' and 'curve' geometry types, which currently have limited application in real world applications.
-You can find the whole list of possible feature types in [the PostGIS manual ](http://postgis.net/docs/using_postgis_dbmanagement.html).
-All 18 types can be represented with the **sf** package, although at the time of writing (2024) plotting only works for the 'core 7'.
+The full OGC standard includes rather exotic geometry types including 'surface' and 'curve' geometry types, which currently have limited application in real-world applications.
+You can find the whole list of possible feature types in the [PostGIS manual ](http://postgis.net/docs/using_postgis_dbmanagement.html).
+All 18 types can be represented with the **sf** package, although at the time of writing (2024), plotting only works for the 'core 7'.
 ]
 
 <div class="figure" style="text-align: center">
-<img src="figures/sf-classes.png" alt="Simple feature types fully supported by sf." width="60%" />
+<img src="images/sf-classes.png" alt="Simple feature types fully supported by sf." width="60%" />
 <p class="caption">(\#fig:sf-ogc)Simple feature types fully supported by sf.</p>
 </div>
 
@@ -163,31 +158,31 @@ All 18 types can be represented with the **sf** package, although at the time of
 \index{sf}
 \index{sf (package)|see {sf}}
 **sf** also supports geometry collections, which can contain multiple geometry types in a single object.
-**sf** provides the same functionality (and more) previously provided in three packages --- **sp** for data classes [@R-sp], **rgdal** for data read/write via an interface to GDAL and PROJ [@R-rgdal] and **rgeos** for spatial operations via an interface to GEOS [@R-rgeos].
+**sf** provides the same functionality (and more) previously provided in three packages --- **sp**\index{sp (package)} for data classes [@R-sp], **rgdal** for data read/write via an interface to GDAL and PROJ [@R-rgdal] and **rgeos** for spatial operations via an interface to GEOS [@R-rgeos].
 
-To re-iterate the message from Chapter 1, geographic R packages have a long history of interfacing with lower level libraries, and **sf** continues this tradition with a unified interface to recent versions of GEOS for geometry operations, the GDAL library for reading and writing geographic data files, and the PROJ library for representing and transforming projected coordinate reference systems.
-Through **s2**, an R interface to Google's spherical geometry library, [`s2`](https://s2geometry.io/), **sf** also has access to fast and accurate "measurements and operations on non-planar geometries" [@bivand_progress_2021].
+To reiterate the message from Chapter 1, geographic R packages have a long history of interfacing with lower level libraries, and **sf** continues this tradition with a unified interface to recent versions of GEOS for geometry operations, the GDAL library for reading and writing geographic data files, and the PROJ library for representing and transforming projected CRSs.
+Through **s2**\index{S2}, an R interface to Google's spherical geometry library, [`s2`](https://s2geometry.io/), **sf** also has access to fast and accurate "measurements and operations on non-planar geometries" [@bivand_progress_2021].
 Since **sf** version 1.0.0, launched in [June 2021](https://cran.r-project.org/src/contrib/Archive/sf/), **s2** functionality is now used by [default](https://r-spatial.org/r/2020/06/17/s2.html) on geometries with geographic (longitude/latitude) coordinate systems, a unique feature of **sf** that differs from spatial libraries that only support GEOS for geometry operations such as the Python package [GeoPandas](geopandas/geopandas/issues/2098).
 We will discuss **s2** in subsequent chapters.
 
 **sf**'s ability to integrate multiple powerful libraries for geocomputation into a single framework is a notable achievement that reduces 'barriers to entry' into the world of reproducible geographic data analysis with high-performance libraries.
-**sf**'s functionality is well documented on its website at [r-spatial.github.io/sf/](https://r-spatial.github.io/sf/index.html) which contains 7 vignettes.
+**sf**'s functionality is well documented on its website at [r-spatial.github.io/sf/](https://r-spatial.github.io/sf/index.html) which contains seven vignettes.
 These can be viewed offline as follows:
 
 
-```r
+``` r
 vignette(package = "sf") # see which vignettes are available
 vignette("sf1")          # an introduction to the package
 ```
 
 
 
-As the first vignette explains, simple feature objects in R are stored in a data frame, with geographic data occupying a special column, usually named 'geom' or 'geometry'.
+As the first vignette explains, simple feature objects in R are stored in a data frame, with geographic data occupying a special column, usually named 'geom' or 'geometry'\index{vector!geometry}.
 We will use the `world` dataset provided by **spData** [@R-spData], loaded at the beginning of this chapter, to show what `sf` objects are and how they work.
 `world` is an '`sf` data frame' containing spatial and attribute columns, the names of which are returned by the function `names()` (the last column in this example contains the geographic information).
 
 
-```r
+``` r
 class(world)
 #> [1] "sf"         "tbl_df"     "tbl"        "data.frame"
 names(world)
@@ -203,13 +198,13 @@ Although part of R's default installation (base R), `plot()` is a [*generic*](ht
 **sf** contains the non-exported (hidden from users most of the time) `plot.sf()` function which is what is called behind the scenes in the following command, which creates Figure \@ref(fig:world-all).
 
 
-```r
+``` r
 plot(world)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figures/world-all-1.png" alt="A spatial plot of the world using the sf package, with a facet for each attribute." width="100%" />
-<p class="caption">(\#fig:world-all)A spatial plot of the world using the sf package, with a facet for each attribute.</p>
+<img src="figures/world-all-1.png" alt="Map of the world using the sf package, with a facet for each attribute." width="100%" />
+<p class="caption">(\#fig:world-all)Map of the world using the sf package, with a facet for each attribute.</p>
 </div>
 
 Note that instead of creating a single map by default for geographic objects, as most GIS programs do, `plot()`ing `sf` objects results in a map for each variable in the datasets.
@@ -219,7 +214,7 @@ More broadly, treating geographic objects as regular data frames with spatial po
 The commonly used `summary()` function, for example, provides a useful overview of the variables within the `world` object.
 
 
-```r
+``` r
 summary(world["lifeExp"])
 #>     lifeExp                geom    
 #>  Min.   :50.6   MULTIPOLYGON :177  
@@ -228,11 +223,11 @@ summary(world["lifeExp"])
 #>  Mean   :70.9                      
 #>  3rd Qu.:76.8                      
 #>  Max.   :83.6                      
-#>  NA's   :10
+#>  NAs    :10
 ```
 
 Although we have only selected one variable for the `summary()` command, it also outputs a report on the geometry.
-This demonstrates the 'sticky' behavior of the geometry columns of **sf** objects, meaning the geometry is kept unless the user deliberately removes them, as we'll see in Section \@ref(vector-attribute-manipulation).
+This demonstrates the 'sticky' behavior of the geometry columns of **sf** objects: they are kept unless the user deliberately removes them, as we'll see in Section \@ref(vector-attribute-manipulation).
 The result provides a quick summary of both the non-spatial and spatial data contained in `world`: the mean average life expectancy is 71 years (ranging from less than 51 to more than 83 years with a median of 73 years) across all countries.
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">The word `MULTIPOLYGON` in the summary output above refers to the geometry type of features (countries) in the `world` object.
@@ -245,7 +240,7 @@ It is also worth taking a deeper look at the basic behavior and contents of this
 The output shows two major differences compared with a regular `data.frame`: the inclusion of additional geographic metadata (`Geometry type`, `Dimension`, `Bounding box` and coordinate reference system information), and the presence of a 'geometry column', here named `geom`:
 
 
-```r
+``` r
 world_mini = world[1:2, 1:3]
 world_mini
 #> Simple feature collection with 2 features and 3 fields
@@ -253,11 +248,9 @@ world_mini
 #> Dimension:     XY
 #> Bounding box:  xmin: -180 ymin: -18.3 xmax: 180 ymax: -0.95
 #> Geodetic CRS:  WGS 84
-#> # A tibble: 2 × 4
-#>   iso_a2 name_long continent                                                geom
-#>   <chr>  <chr>     <chr>                                      <MULTIPOLYGON [°]>
-#> 1 FJ     Fiji      Oceania   (((-180 -16.6, -180 -16.5, -180 -16, -180 -16.1, -…
-#> 2 TZ     Tanzania  Africa    (((33.9 -0.95, 31.9 -1.03, 30.8 -1.01, 30.4 -1.13,…
+#>   iso_a2 name_long continent                           geom
+#> 1     FJ      Fiji   Oceania MULTIPOLYGON (((-180 -16.6,...
+#> 2     TZ  Tanzania    Africa MULTIPOLYGON (((33.9 -0.95,...
 ```
 
 All this may seem rather complex, especially for a class system that is supposed to be 'simple'!
@@ -272,7 +265,7 @@ In turn, `sfc` objects are composed of one or more objects of class `sfg`: simpl
 \index{simple feature columns|see {sf!sfc}}
 
 To understand how the spatial components of simple features work, it is vital to understand simple feature geometries.
-For this reason we cover each currently supported simple features geometry type in Section \@ref(geometry) before moving on to describe how these can be represented in R using `sf` objects, which are based on `sfg` and `sfc` objects.
+For this reason, we cover each currently supported simple features geometry type in Section \@ref(geometry) before moving on to describe how these can be represented in R using `sf` objects, which are based on `sfg` and `sfc` objects.
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">The preceding code chunk uses `=` to create a new object called `world_mini` in the command `world_mini = world[1:2, 1:3]`.
 This is called assignment.
@@ -286,7 +279,7 @@ Simple features is a widely supported data model that underlies data structures 
 A major advantage of this is that using the data model ensures your work is cross-transferable to other setups, for example importing from and exporting to spatial databases.
 \index{sf!why simple features}
 
-A more specific question from an R perspective is "why use the **sf** package"?
+A more specific question from an R perspective is "why use the **sf** package?"
 There are many reasons (linked to the advantages of the simple features model):
 
 - Fast reading and writing of data
@@ -300,16 +293,16 @@ Unlike the function `st_read()`, which returns attributes stored in a base R `da
 This is demonstrated below:
 
 
-```r
-world_dfr = st_read(system.file("shapes/world.shp", package = "spData"))
+``` r
+world_dfr = st_read(system.file("shapes/world.gpkg", package = "spData"))
 #> Reading layer `world' from data source 
-#>   `/usr/local/lib/R/site-library/spData/shapes/world.shp' using driver `ESRI Shapefile'
+#>   `/usr/local/lib/R/site-library/spData/shapes/world.gpkg' using driver `GPKG'
 #> Simple feature collection with 177 features and 10 fields
 #> Geometry type: MULTIPOLYGON
 #> Dimension:     XY
 #> Bounding box:  xmin: -180 ymin: -89.9 xmax: 180 ymax: 83.6
 #> Geodetic CRS:  WGS 84
-world_tbl = read_sf(system.file("shapes/world.shp", package = "spData"))
+world_tbl = read_sf(system.file("shapes/world.gpkg", package = "spData"))
 class(world_dfr)
 #> [1] "sf"         "data.frame"
 class(world_tbl)
@@ -317,19 +310,19 @@ class(world_tbl)
 ```
 
 As described in Chapter \@ref(attr), which shows how to manipulate `sf` objects with **tidyverse** functions, **sf** is now the go-to package for analysis of spatial vector data in R.
-**spatstat**, a package ecosystem which provides numerous functions for spatial statistics, and **terra** both have vector geographic data classes, but neither have the same level of uptake as **sf** does for working with vector data.
+**spatstat**, a package ecosystem which provides numerous functions for spatial statistics, and **terra** both have vector geographic data classes, but neither has the same level of uptake as **sf** does for working with vector data.
 Many popular packages build on **sf**, as shown by the rise in its popularity in terms of number of downloads per day, as shown in Section \@ref(r-ecosystem) in the previous chapter.
 
-### Basic map making {#basic-map}
+### Basic maps {#basic-map}
 
-Basic maps are created in **sf** with `plot()`.
-By default this creates a multi-panel plot, one sub-plot for each variable of the object, as illustrated in the left-hand panel in Figure \@ref(fig:sfplot).
+Basic geographic visualizations (maps) are created in **sf** with base R's `plot()` function.
+By default, this creates a multi-panel plot, one sub-plot for each variable of the object, as illustrated in the left-hand panel in Figure \@ref(fig:sfplot).
 A legend or 'key' with a continuous color is produced if the object to be plotted has a single variable (see the right-hand panel).
-Colors can also be set with `col = `, although this will not create a continuous palette or a legend. 
-\index{map making!basic}
+You can also set fixed colors in `plot()` commands with `col` and `border` arguments. 
+\index{map-making!basic}
 
 
-```r
+``` r
 plot(world[3:6])
 plot(world["pop"])
 ```
@@ -346,7 +339,7 @@ Plots are added as layers to existing images by setting `add = TRUE`.^[
 To demonstrate this, and to provide an insight into the contents of Chapters \@ref(attr) and \@ref(spatial-operations) on attribute and spatial data operations, the subsequent code chunk filters countries in Asia and combines them into a single feature:
 
 
-```r
+``` r
 world_asia = world[world$continent == "Asia", ]
 asia = st_union(world_asia)
 ```
@@ -356,28 +349,28 @@ Note that the first plot must only have one facet for `add = TRUE` to work.
 If the first plot has a key, `reset = FALSE` must be used:
 
 
-```r
+``` r
 plot(world["pop"], reset = FALSE)
 plot(asia, add = TRUE, col = "red")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figures/asia-1.png" alt="A plot of Asia added as a layer on top of countries worldwide." width="50%" />
-<p class="caption">(\#fig:asia)A plot of Asia added as a layer on top of countries worldwide.</p>
+<img src="figures/asia-1.png" alt="Plot of Asia added as a layer on top of countries worldwide." width="50%" />
+<p class="caption">(\#fig:asia)Plot of Asia added as a layer on top of countries worldwide.</p>
 </div>
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">Adding layers in this way can be used to verify the geographic correspondence between layers: 
-the `plot()` function is fast to execute and requires few lines of code, but does not create interactive maps with a wide range of options.
-For more advanced map making we recommend using dedicated visualization packages such as **tmap** [@tmap2018] (see Chapter \@ref(adv-map)).</div>\EndKnitrBlock{rmdnote}
+the `plot()` function is fast and requires few lines of code, but its functionality is limited.
+For more advanced map-making we recommend using dedicated visualization packages such as **tmap** [@tmap2018] (see Chapter \@ref(adv-map)).</div>\EndKnitrBlock{rmdnote}
 
 There are various ways to modify maps with **sf**'s `plot()` method.
 Because **sf** extends base R plotting methods, `plot()`'s arguments work with `sf` objects (see `?graphics::plot` and `?par` for information on arguments such as `main =`).^[
 Note: many plot arguments are ignored in facet maps, when more than one `sf` column is plotted.] 
-\index{base plot|see {map making}}\index{map making!base plotting} Figure \@ref(fig:contpop) illustrates this flexibility by overlaying circles, whose diameters (set with `cex =`) represent country populations, on a map of the world.
+\index{base plot|see {map-making}}\index{map-making!base plotting} Figure \@ref(fig:contpop) illustrates this flexibility by overlaying circles, whose diameters (set with `cex =`) represent country populations, on a map of the world.
 An unprojected version of this figure can be created with the following commands (see exercises at the end of this chapter and the script [`02-contplot.R`](https://github.com/geocompx/geocompr/blob/main/code/02-contpop.R) to reproduce Figure \@ref(fig:contpop)):
 
 
-```r
+``` r
 plot(world["continent"], reset = FALSE)
 cex = sqrt(world$pop) / 10000
 world_cents = st_centroid(world, of_largest = TRUE)
@@ -392,7 +385,8 @@ plot(st_geometry(world_cents), add = TRUE, cex = cex)
 The code above uses the function `st_centroid()` to convert one geometry type (polygons) to another (points) (see Chapter \@ref(geometry-operations)), the aesthetics of which are varied with the `cex` argument.
 
 \index{bounding box}
-**sf**'s plot method also has arguments specific to geographic data. `expandBB`, for example, can be used to plot an `sf` object in context:
+**sf**'s plot method also has arguments specific to geographic data.
+`expandBB`, for example, can be used to plot an `sf` object in context:
 it takes a numeric vector of length four that expands the bounding box of the plot relative to zero in the following order: bottom, left, top, right.
 This is used to plot India in the context of its giant Asian neighbors, with an emphasis on China to the east, in the following code chunk, which generates Figure \@ref(fig:china) (see exercises below on adding text to plots):^[
 Note the use of `st_geometry(india)` to return only the geometry associated with the object to prevent attributes being plotted in a simple feature column (`sfc`) object.
@@ -400,7 +394,7 @@ An alternative is to use `india[0]`, which returns an `sf` object that contains 
 ]
 
 
-```r
+``` r
 india = world[world$name_long == "India", ]
 plot(st_geometry(india), expandBB = c(0, 0.2, 0.1, 1), col = "gray", lwd = 3)
 plot(st_geometry(world_asia), add = TRUE)
@@ -420,21 +414,21 @@ See Section \@ref(static-maps) for other visualization techniques for representi
 
 Geometries are the basic building blocks of simple features.
 Simple features in R can take on one of the 18 geometry types supported by the **sf** package.
-\index{geometry types|see {sf!geometry types}}
-\index{sf!geometry types}
 In this chapter we will focus on the seven most commonly used types: `POINT`, `LINESTRING`, `POLYGON`, `MULTIPOINT`, `MULTILINESTRING`, `MULTIPOLYGON` and `GEOMETRYCOLLECTION`.
+\index{geometry types|see {sf!geometry types}} \index{sf!geometry types}
 
 Generally, well-known binary (WKB) or well-known text (WKT) are the standard encoding for simple feature geometries.
-\index{well-known text}
-\index{WKT|see {well-known text}}
-\index{well-known binary}
 WKB representations are usually hexadecimal strings easily readable for computers.
 This is why GIS and spatial databases use WKB to transfer and store geometry objects.
 WKT, on the other hand, is a human-readable text markup description of simple features. 
 Both formats are exchangeable, and if we present one, we will naturally choose the WKT representation.
+\index{well-known text}
+\index{WKT|see {well-known text}}
+\index{well-known binary}
+\index{WKB|see {well-known binary}}
 
 The basis for each geometry type is the point. 
-A point is simply a coordinate in 2D, 3D or 4D space (see `vignette("sf1")` for more information) such as (Figure \@ref(fig:sfcs), left panel):
+A point is simply a coordinate in two-, three-, or four-dimensional space (see `vignette("sf1")` for more information) such as (Figure \@ref(fig:sfcs), left panel):
 \index{sf!point}
 
 - `POINT (5 2)`
@@ -454,8 +448,8 @@ A polygon with a hole would be, for example, `POLYGON ((1 5, 2 2, 4 1, 4 4, 1 5)
 - Polygon without a hole: `POLYGON ((1 5, 2 2, 4 1, 4 4, 1 5))`
 
 <div class="figure" style="text-align: center">
-<img src="figures/sfcs-1.png" alt="Illustration of point, linestring and polygon geometries." width="100%" />
-<p class="caption">(\#fig:sfcs)Illustration of point, linestring and polygon geometries.</p>
+<img src="figures/sfcs-1.png" alt="Point, linestring and polygon geometries." width="100%" />
+<p class="caption">(\#fig:sfcs)Point, linestring and polygon geometries.</p>
 </div>
 
 
@@ -486,24 +480,24 @@ Finally, a geometry collection can contain any combination of geometries includi
 ### The sf class {#sf}
 
 Simple features consist of two main parts: geometries and non-geographic attributes.
-Figure \@ref(fig:02-sfdiagram) shows how an sf object is created -- geometries come from an `sfc` object, while attributes are taken from a `data.frame` or `tibble`.^[To learn more about building sf geometries from scratch read the following Sections \@ref(sfg) and \@ref(sfc).]
+Figure \@ref(fig:02-sfdiagram) shows how an sf object is created -- geometries come from an `sfc` object, while attributes are taken from a `data.frame` or `tibble`.^[To learn more about building sf geometries from scratch, see the following Sections \@ref(sfg) and \@ref(sfc).]
 
 <div class="figure" style="text-align: center">
-<img src="figures/02-sfdiagram.png" alt="Building blocks of sf objects." width="100%" />
+<img src="images/02-sfdiagram.png" alt="Building blocks of sf objects." width="100%" />
 <p class="caption">(\#fig:02-sfdiagram)Building blocks of sf objects.</p>
 </div>
 
 Non-geographic attributes represent the name of the feature or other attributes such as measured values, groups, and other things.
 \index{sf!class}
-To illustrate attributes, we will represent a temperature of 25°C in London on June 21^st^, 2023.
-This example contains a geometry (the coordinates), and three attributes with three different classes (place name, temperature and date).^[
+To illustrate attributes, we will represent a temperature of 25°C in London on June 21, 2023.
+This example contains a geometry (coordinates), and three attributes with three different classes (place name, temperature and date).^[
 Other attributes might include an urbanity category (city or village), or a remark if the measurement was made using an automatic station.
 ]
 Objects of class `sf` represent such data by combining the attributes (`data.frame`) with the simple feature geometry column (`sfc`).
 They are created with `st_sf()` as illustrated below, which creates the London example described above:
 
 
-```r
+``` r
 lnd_point = st_point(c(0.1, 51.5))                 # sfg object
 lnd_geom = st_sfc(lnd_point, crs = "EPSG:4326")    # sfc object
 lnd_attrib = data.frame(                           # data.frame object
@@ -520,7 +514,7 @@ Third, attributes were stored in a `data.frame`, which was combined with the `sf
 This results in an `sf` object, as demonstrated below (some output is omitted):
 
 
-```r
+``` r
 lnd_sf
 #> Simple feature collection with 1 features and 3 fields
 #> ...
@@ -529,7 +523,7 @@ lnd_sf
 ```
 
 
-```r
+``` r
 class(lnd_sf)
 #> [1] "sf"         "data.frame"
 ```
@@ -548,7 +542,7 @@ The `sfg` class represents the different simple feature geometry types in R: poi
 \index{simple feature geometries|see {sf!sfg}}
 
 Usually you are spared the tedious task of creating geometries on your own since you can simply import an already existing spatial file.
-However, there are a set of functions to create simple feature geometry objects (`sfg`) from scratch if needed.
+However, there are a set of functions to create simple feature geometry objects (`sfg`) from scratch, if needed.
 The names of these functions are simple and consistent, as they all start with the `st_`  prefix and end with the name of the geometry type in lowercase letters:
 
 - A point: `st_point()`
@@ -568,7 +562,7 @@ The names of these functions are simple and consistent, as they all start with t
 The function `st_point()` creates single points from numeric vectors:
 
 
-```r
+``` r
 st_point(c(5, 2))                 # XY point
 #> POINT (5 2)
 st_point(c(5, 2, 3))              # XYZ point
@@ -579,13 +573,13 @@ st_point(c(5, 2, 3, 1))           # XYZM point
 #> POINT ZM (5 2 3 1)
 ```
 
-The results show that XY (2D coordinates), XYZ (3D coordinates) and XYZM (3D with an additional variable, typically measurement accuracy) point types are created from vectors of length 2, 3, and 4, respectively. 
+The results show that XY (2D coordinates), XYZ (3D coordinates) and XYZM (3D with an additional variable, typically measurement accuracy) point types are created from vectors of lengths 2, 3, and 4, respectively. 
 The XYM type must be specified using the `dim` argument (which is short for dimension).
 
 By contrast, use matrices in the case of multipoint (`st_multipoint()`) and linestring (`st_linestring()`) objects:
 
 
-```r
+``` r
 # the rbind function simplifies the creation of matrices
 ## MULTIPOINT
 multipoint_matrix = rbind(c(5, 2), c(1, 3), c(3, 4), c(3, 2))
@@ -600,7 +594,7 @@ st_linestring(linestring_matrix)
 Finally, use lists for the creation of multilinestrings, (multi-)polygons and geometry collections:
 
 
-```r
+``` r
 ## POLYGON
 polygon_list = list(rbind(c(1, 5), c(2, 2), c(4, 1), c(4, 4), c(1, 5)))
 st_polygon(polygon_list)
@@ -608,7 +602,7 @@ st_polygon(polygon_list)
 ```
 
 
-```r
+``` r
 ## POLYGON with a hole
 polygon_border = rbind(c(1, 5), c(2, 2), c(4, 1), c(4, 4), c(1, 5))
 polygon_hole = rbind(c(2, 4), c(3, 4), c(3, 3), c(2, 3), c(2, 4))
@@ -618,7 +612,7 @@ st_polygon(polygon_with_hole_list)
 ```
 
 
-```r
+``` r
 ## MULTILINESTRING
 multilinestring_list = list(rbind(c(1, 5), c(4, 4), c(4, 1), c(2, 2), c(3, 2)), 
                             rbind(c(1, 2), c(2, 4)))
@@ -627,7 +621,7 @@ st_multilinestring(multilinestring_list)
 ```
 
 
-```r
+``` r
 ## MULTIPOLYGON
 multipolygon_list = list(list(rbind(c(1, 5), c(2, 2), c(4, 1), c(4, 4), c(1, 5))),
                          list(rbind(c(0, 2), c(1, 2), c(1, 3), c(0, 3), c(0, 2))))
@@ -636,7 +630,7 @@ st_multipolygon(multipolygon_list)
 ```
 
 
-```r
+``` r
 ## GEOMETRYCOLLECTION
 geometrycollection_list = list(st_multipoint(multipoint_matrix),
                               st_linestring(linestring_matrix))
@@ -648,13 +642,13 @@ st_geometrycollection(geometrycollection_list)
 ### Simple feature columns (sfc) {#sfc}
 
 One `sfg` object contains only a single simple feature geometry. 
-A simple feature geometry column (`sfc`) is a list of `sfg` objects, which is additionally able to contain information about the coordinate reference system in use.
+A simple feature geometry column (`sfc`) is a list of `sfg` objects, which is additionally able to contain information about the CRS in use.
 For instance, to combine two simple features into one object with two features, we can use the `st_sfc()` function. 
 \index{sf!simple feature columns (sfc)}
 This is important since `sfc` represents the geometry column in **sf** data frames:
 
 
-```r
+``` r
 # sfc POINT
 point1 = st_point(c(5, 2))
 point2 = st_point(c(1, 3))
@@ -674,7 +668,7 @@ Therefore, when we convert `sfg` objects of type polygon into a simple feature g
 Equally, a geometry column of multilinestrings would result in an `sfc` object of type multilinestring:
 
 
-```r
+``` r
 # sfc POLYGON
 polygon_list1 = list(rbind(c(1, 5), c(2, 2), c(4, 1), c(4, 4), c(1, 5)))
 polygon1 = st_polygon(polygon_list1)
@@ -687,7 +681,7 @@ st_geometry_type(polygon_sfc)
 ```
 
 
-```r
+``` r
 # sfc MULTILINESTRING
 multilinestring_list1 = list(rbind(c(1, 5), c(4, 4), c(4, 1), c(2, 2), c(3, 2)), 
                             rbind(c(1, 2), c(2, 4)))
@@ -704,7 +698,7 @@ st_geometry_type(multilinestring_sfc)
 It is also possible to create an `sfc` object from `sfg` objects with different geometry types:
 
 
-```r
+``` r
 # sfc GEOMETRY
 point_multilinestring_sfc = st_sfc(point1, multilinestring1)
 st_geometry_type(point_multilinestring_sfc)
@@ -712,11 +706,11 @@ st_geometry_type(point_multilinestring_sfc)
 #> 18 Levels: GEOMETRY POINT LINESTRING POLYGON MULTIPOINT ... TRIANGLE
 ```
 
-As mentioned before, `sfc` objects can additionally store information on the coordinate reference systems (CRS).
+As mentioned before, `sfc` objects can additionally store information on the CRS.
 The default value is `NA` (*Not Available*), as can be verified with `st_crs()`:
 
 
-```r
+``` r
 st_crs(points_sfc)
 #> Coordinate Reference System: NA
 ```
@@ -725,7 +719,7 @@ All geometries in `sfc` objects must have the same CRS.
 A CRS can be specified with the `crs` argument of `st_sfc()` (or `st_sf()`), which takes a **CRS identifier** provided as a text string, such as `crs = "EPSG:4326"` (see Section \@ref(crs-in-r) for other CRS representations and details on what this means).
 
 
-```r
+``` r
 # Set the CRS with an identifier referring to an 'EPSG' CRS code:
 points_sfc_wgs = st_sfc(point1, point2, crs = "EPSG:4326")
 st_crs(points_sfc_wgs) # print CRS (only first 4 lines of output shown)
@@ -744,11 +738,11 @@ st_crs(points_sfc_wgs) # print CRS (only first 4 lines of output shown)
 **sfheaders** is an R package that speeds-up the construction, conversion and manipulation of `sf` objects [@cooley_sfheaders_2020].
 It focuses on building `sf` objects from vectors, matrices and data frames, rapidly, and without depending on the **sf** library; and exposing its underlying C++ code through header files (hence the name, **sfheaders**).
 This approach enables others to extend it using compiled and fast-running code.
-Every core **sfheaders** function has a corresponding C++ implementation, as described in [the `Cpp` vignette](https://dcooley.github.io/sfheaders/articles/Cpp.html).
+Every core **sfheaders** function has a corresponding C++ implementation, as described in the [`Cpp` vignette](https://dcooley.github.io/sfheaders/articles/Cpp.html).
 For most people, the R functions will be more than sufficient to benefit from the computational speed of the package.
 **sfheaders** was developed separately from **sf**, but aims to be fully compatible, creating valid `sf` objects of the type described in preceding sections.
 
-The simplest use-case for **sfheaders** is demonstrated in the code chunks below with examples of building `sfg`, `sfc`, and `sf` objects showing:
+The simplest use case for **sfheaders** is demonstrated in the code chunks below with examples of building `sfg`, `sfc`, and `sf` objects showing:
 
 - A vector converted to `sfg_POINT`
 - A matrix converted to `sfg_LINESTRING`
@@ -757,7 +751,7 @@ The simplest use-case for **sfheaders** is demonstrated in the code chunks below
 We will start by creating the simplest possible `sfg` object, a single coordinate pair, assigned to a vector named `v`:
 
 
-```r
+``` r
 v = c(1, 1)
 v_sfg_sfh = sfheaders::sfg_point(obj = v)
 v_sfg_sfh # printing without sf loaded
@@ -775,7 +769,7 @@ The example above shows how the `sfg` object `v_sfg_sfh` is printed when **sf** 
 When **sf** is loaded (as is the case here), the result of the above command is indistinguishable from `sf` objects:
 
 
-```r
+``` r
 v_sfg_sf = st_point(v)
 print(v_sfg_sf) == print(v_sfg_sfh)
 #> POINT (1 1)
@@ -788,7 +782,7 @@ print(v_sfg_sf) == print(v_sfg_sfh)
 The next examples shows how **sfheaders** creates `sfg` objects from matrices and data frames:
 
 
-```r
+``` r
 # matrices
 m = matrix(1:8, ncol = 2)
 sfheaders::sfg_linestring(obj = m)
@@ -802,7 +796,7 @@ sfheaders::sfg_polygon(obj = df)
 Reusing the objects `v`, `m`, and `df` we can also build simple feature columns (`sfc`) as follows (outputs not shown):
 
 
-```r
+``` r
 sfheaders::sfc_point(obj = v)
 sfheaders::sfc_linestring(obj = m)
 sfheaders::sfc_polygon(obj = df)
@@ -811,17 +805,17 @@ sfheaders::sfc_polygon(obj = df)
 Similarly, `sf` objects can be created as follows:
 
 
-```r
+``` r
 sfheaders::sf_point(obj = v)
 sfheaders::sf_linestring(obj = m)
 sfheaders::sf_polygon(obj = df)
 ```
 
-In each of these examples the CRS (coordinate reference system) is not defined.
+In each of these examples, the CRS is not defined.
 If you plan on doing any calculations or geometric operations using **sf** functions, we encourage you to set the CRS (see Chapter \@ref(reproj-geo-data) for details):
 
 
-```r
+``` r
 df_sf = sfheaders::sf_polygon(obj = df)
 st_crs(df_sf) = "EPSG:4326"
 ```
@@ -832,26 +826,27 @@ Benchmarks, in the package's [documentation](https://dcooley.github.io/sfheaders
 
 ### Spherical geometry operations with S2 {#s2}
 
-Spherical geometry engines are based on the fact that world is round while simple mathematical procedures for geocomputation, such as calculating a straight line between two points or the area enclosed by a polygon, assume planar (projected) geometries.
-Since **sf** version 1.0.0, R supports spherical geometry operations 'out of the box' (and by default), thanks to its interface to Google's S2 spherical geometry engine via the **s2** interface package.
+Spherical geometry engines are based on the fact that the world is round, while simple mathematical procedures for geocomputation, such as calculating a straight line between two points or the area enclosed by a polygon, assume planar (projected) geometries.
+Since **sf** version 1.0.0, R supports spherical geometry operations 'out of the box' (and by default), thanks to its interface to Google's S2 spherical geometry engine via the **s2** interface package
+\index{S2}.
 S2 is perhaps best known as an example of a Discrete Global Grid System (DGGS).
 Another example is the [H3](https://h3geo.org/) global hexagonal hierarchical spatial index  [@bondaruk_assessing_2020].
 
-Although potentially useful for describing locations anywhere on Earth using character strings, the main benefit of **sf**'s interface to S2 is its provision of drop-in functions for calculations such as distance, buffer, and area calculations, as described in **sf**'s built in documentation which can be opened with the command [`vignette("sf7")`](https://r-spatial.github.io/sf/articles/sf7.html).
+Although potentially useful for describing locations anywhere on Earth using character strings, the main benefit of **sf**'s interface to S2 is its provision of drop-in functions for calculations such as distance, buffer, and area calculations, as described in **sf**'s built-in documentation which can be opened with the command [`vignette("sf7")`](https://r-spatial.github.io/sf/articles/sf7.html).
 
 **sf** can run in two modes with respect to S2: on and off.
 By default the S2 geometry engine is turned on, as can be verified with the following command:
 
 
-```r
+``` r
 sf_use_s2()
 #> [1] TRUE
 ```
 
-An example of the consequences of turning the geometry engine off is shown below, by creating buffers around the `india` object created earlier in the chapter (note the warnings emitted when S2 is turned off) (Figure \ref(fig:s2example)):
+An example of the consequences of turning the geometry engine off is shown below, by creating buffers around the `india` object created earlier in the chapter (note the warnings emitted when S2 is turned off) (Figure \@ref(fig:s2example)):
 
 
-```r
+``` r
 india_buffer_with_s2 = st_buffer(india, 1) # 1 meter
 sf_use_s2(FALSE)
 #> Spherical geometry (s2) switched off
@@ -866,13 +861,13 @@ india_buffer_without_s2 = st_buffer(india, 1) # 1 degree
 <p class="caption">(\#fig:s2example)Example of the consequences of turning off the S2 geometry engine. Both representations of a buffer around India were created with the same command but the purple polygon object was created with S2 switched on, resulting in a buffer of 1 m. The larger light green polygon was created with S2 switched off, resulting in a buffer of 1 degree, which is not accurate.</p>
 </div>
 
-The right panel of Figure \@ref(fig:s2example) is incorrect as the buffer of 1 degree does not return the equal distance around the `india` polygon (for more explanation of this issue, read Section \@ref(geom-proj)).
+The right panel of Figure \@ref(fig:s2example) is incorrect, as the buffer of 1 degree does not return the equal distance around the `india` polygon (for more explanation of this issue, see Section \@ref(geom-proj)).
 
-Throughout this book we will assume that S2 is turned on, unless explicitly stated.
+Throughout this book, we will assume that S2 is turned on, unless explicitly stated.
 Turn it on again with the following command.
 
 
-```r
+``` r
 sf_use_s2(TRUE)
 #> Spherical geometry (s2) switched on
 ```
@@ -880,20 +875,20 @@ sf_use_s2(TRUE)
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">Although the **sf**'s use of S2 makes sense in many cases, in some cases there are good reasons for turning S2 off for the duration of an R session or even for an entire project.
 As documented in issue [1771](https://github.com/r-spatial/sf/issues/1771) in **sf**'s GitHub repo, the default behavior can make code that would work with S2 turned off (and with older versions of **sf**) fail.
 These edge cases include operations on polygons that are not valid according to S2's stricter definition.
-If you see error message such as `#> Error in s2_geography_from_wkb ...` it may be worth trying the command that generated the error message again, after turning off S2. 
-To turn off S2 for the entirety of a project you can create a file called .Rprofile in the root directory (the main folder) of your project containing the command `sf::sf_use_s2(FALSE)`.</div>\EndKnitrBlock{rmdnote}
+If you see error messages such as `#> Error in s2_geography_from_wkb ...` it may be worth trying the command that generated the error message again, after turning off S2. 
+To turn off S2 for the entirety of a project, you can create a file called .Rprofile in the root directory (the main folder) of your project containing the command `sf::sf_use_s2(FALSE)`.</div>\EndKnitrBlock{rmdnote}
 
 ## Raster data
 
-The spatial raster data model represents the world with the continuous grid of cells (often also called pixels; Figure \@ref(fig:raster-intro-plot):A).
+The spatial raster data model represents the world with the continuous grid of cells (often also called pixels; Figure \@ref(fig:raster-intro-plot):A)\index{raster data model}.
 This data model often refers to so-called regular grids, in which each cell has the same, constant size -- and we will focus on the regular grids in this book only.
-However, several other types of grids exist, including rotated, sheared, rectilinear, and curvilinear grids (see Chapter 1 of @pebesma_spatial_2022 or Chapter 2 of @tennekes_elegant_2022).
+However, several other types of grids exist, including rotated, sheared, rectilinear, and curvilinear grids (see chapter 1 of @pebesma_spatial_2023 or chapter 2 of @tennekes_elegant_2022).
 
 The raster data model usually consists of a raster header\index{raster!header}
 and a matrix (with rows and columns) representing equally spaced cells (often also called pixels; Figure \@ref(fig:raster-intro-plot):A).^[
-Depending on the file format the header is part of the actual image data file, e.g., GeoTIFF, or stored in an extra header or world file, e.g., ASCII grid formats. 
+Depending on the file format, the header is part of the actual image data file, e.g., GeoTIFF, or stored in an extra header or world file, e.g., ASCII grid formats. 
 There is also the headerless (flat) binary raster format which should facilitate the import into various software programs.]
-The raster header\index{raster!header} defines the coordinate reference system, the extent and the origin.
+The raster header\index{raster!header} defines the CRS, the extent and the origin.
 \index{raster}
 \index{raster data model}
 The origin (or starting point) is frequently the coordinate of the lower left corner of the matrix (the **terra** package, however, uses the upper left corner, by default (Figure  \@ref(fig:raster-intro-plot):B)).
@@ -906,15 +901,15 @@ $$
 $$
 
 Starting from the origin, we can easily access and modify each single cell by either using the ID of a cell (Figure \@ref(fig:raster-intro-plot):B) or by explicitly specifying the rows and columns.
-This matrix representation avoids storing explicitly the coordinates for the four corner points (in fact it only stores one coordinate, namely the origin) of each cell corner as would be the case for rectangular vector polygons.
-This and map algebra (Section \@ref(map-algebra)) makes raster processing much more efficient and faster than vector data processing.
+This matrix representation avoids storing explicitly the coordinates for the four corner points (in fact, it only stores one coordinate, namely the origin) of each cell corner as would be the case for rectangular vector polygons.
+This and map algebra (Section \@ref(map-algebra)) make raster processing much more efficient and faster than vector data processing.
 
-In contrast to vector data, the cell of one raster layer can only hold a single value.^[Thus to store many values for a single location we need to have many raster layers.]
-The value might be continuous or categorical (Figure \@ref(fig:raster-intro-plot):C).
+In contrast to vector data, the cell of one raster layer can only hold a single value.^[Thus, to store many values for a single location we need to have many raster layers.]
+The value might be continuous or categorical (Figure \@ref(fig:raster-intro-plot)C).
 
 <div class="figure" style="text-align: center">
-<img src="figures/raster-intro-plot-1.png" alt="Raster data types: (A) cell IDs, (B) cell values, (C) a colored raster map." width="100%" />
-<p class="caption">(\#fig:raster-intro-plot)Raster data types: (A) cell IDs, (B) cell values, (C) a colored raster map.</p>
+<img src="figures/raster-intro-plot-1.png" alt="Raster data types." width="100%" />
+<p class="caption">(\#fig:raster-intro-plot)Raster data types.</p>
 </div>
 
 Raster maps usually represent continuous phenomena such as elevation, temperature, population density or spectral data.
@@ -923,20 +918,21 @@ Both uses of raster datasets are illustrated in Figure \@ref(fig:raster-intro-pl
 Depending on the nature of the application, vector representations of discrete features may be more suitable.
 
 <div class="figure" style="text-align: center">
-<img src="figures/raster-intro-plot2-1.png" alt="Examples of continuous and categorical rasters." width="100%" />
-<p class="caption">(\#fig:raster-intro-plot2)Examples of continuous and categorical rasters.</p>
+<img src="figures/raster-intro-plot2-1.png" alt="Examples of (A) continuous and (B) categorical rasters." width="100%" />
+<p class="caption">(\#fig:raster-intro-plot2)Examples of (A) continuous and (B) categorical rasters.</p>
 </div>
 
 ### R packages for working with raster data
 
 Over the last two decades, several packages for reading and processing raster datasets have been developed.
-As outlined in Section \@ref(the-history-of-r-spatial), chief among them was **raster**, which led to a step change in R's raster capabilities when it was launched in 2010 and the premier package in the space until the development of **terra** and **stars**.
-Both more recently developed packages provide powerful and performant functions for working with raster datasets and there is substantial overlap between their possible use cases.
-In this book we focus on **terra**, which replaces the older and (in most cases) slower **raster**.
-Before learning about the how **terra**'s class system works, this section describes similarities and differences between **terra** and **stars**; this knowledge will help decide which is most appropriate in different situations.
+\index{raster (package)}\index{terra (package)}\index{stars (package)}
+As outlined in Section \@ref(history-of-r-spatial), chief among them was **raster**, which led to a step change in R's raster capabilities when it was launched in 2010 and the premier package in the space until the development of **terra** and **stars**.
+Both more recently developed packages provide powerful and performant functions for working with raster datasets, and there is substantial overlap between their possible use cases.
+In this book, we focus on **terra**, which replaces the older and (in most cases) slower **raster**.
+Before learning about how **terra**'s class system works, this section describes similarities and differences between **terra** and **stars**; this knowledge will help decide which is most appropriate in different situations.
 
 First, **terra** focuses on the most common raster data model (regular grids), while **stars** also allows storing less popular models (including regular, rotated, sheared, rectilinear, and curvilinear grids).
-While **terra** usually handles one or multilayered rasters^[It also has an additional class `SpatRasterDataset` for storing many collections of datasets.], the **stars** package provides ways to store raster data cubes -- a raster object with many layers (e.g., bands), for many moments in time (e.g., months), and many attributes (e.g., sensor type A and sensor type B).
+While **terra** usually handles one or multi-layered rasters^[It also has an additional class `SpatRasterDataset` for storing many collections of datasets.], the **stars** package provides ways to store raster data cubes -- a raster object with many layers (e.g., bands), for many moments in time (e.g., months), and many attributes (e.g., sensor type A and sensor type B).
 Importantly, in both packages, all layers or elements of a data cube must have the same spatial dimensions and extent.
 Second, both packages allow to either read all of the raster data into memory or just to read its metadata -- this is usually done automatically based on the input file size.
 However, they store raster values very differently. 
@@ -948,30 +944,29 @@ The **terra** package mostly relies on a large number of built-in functions, whe
 On the other hand, **stars** uses some built-in functions (usually with names starting with `st_`), some existing **dplyr** functions (e.g., `filter()` or `slice()`), and also has its own methods for existing R functions (e.g., `split()` or `aggregate()`).
 
 Importantly, it is straightforward to convert objects from **terra** to **stars** (using `st_as_stars()`) and the other way round (using `rast()`).
-We also encourage you to read @pebesma_spatial_2022 for the most comprehensive introduction to the **stars** package.
+We also encourage you to read @pebesma_spatial_2023 for the most comprehensive introduction to the **stars** package.
 
-### An introduction to terra
+### Introduction to terra
 
+\index{terra (package)}
 The **terra** package supports raster objects in R.
 It provides an extensive set of functions to create, read, export, manipulate and process raster datasets.
 **terra**'s functionality is largely the same as the more mature **raster** package, but there are some differences: **terra** functions are usually more computationally efficient than **raster** equivalents.
 On the other hand, the **raster** class system is popular and used by many other packages.
-You can seamlessly translate between the two types of object to ensure backwards compatibility with older scripts and packages, for example, with the functions [`raster()`](https://rspatial.github.io/raster/reference/raster.html), [`stack()`](https://rspatial.github.io/raster/reference/stack.html), and `brick()` in the **raster** package (see the previous chapter for more on the evolution of R packages for working with geographic data).
-
-
+You can seamlessly translate between the two types of object to ensure backward compatibility with older scripts and packages, for example, with the functions [`raster()`](https://rspatial.github.io/raster/reference/raster.html), [`stack()`](https://rspatial.github.io/raster/reference/stack.html), and `brick()` in the **raster** package (see the previous chapter for more on the evolution of R packages for working with geographic data).
 
 In addition to functions for raster data manipulation, **terra** provides many low-level functions that can form a foundation for developing new tools for working with raster datasets.
-\index{terra (package)|see {terra}}
+\index{terra (package)}
 **terra** also lets you work on large raster datasets that are too large to fit into the main memory.
 In this case, **terra** provides the possibility to divide the raster into smaller chunks, and processes these iteratively instead of loading the whole raster file into RAM.
 
 For the illustration of **terra** concepts, we will use datasets from the **spDataLarge** [@R-spDataLarge].
-It consists of a few raster objects and one vector object covering an area of the Zion National Park (Utah, USA).
+It consists of a few raster objects and one vector object covering an area of Zion National Park (Utah, USA).
 For example, `srtm.tif` is a digital elevation model of this area (for more details, see its documentation `?srtm`).
 First, let's create a `SpatRaster` object named `my_rast`:
 
 
-```r
+``` r
 raster_filepath = system.file("raster/srtm.tif", package = "spDataLarge")
 my_rast = rast(raster_filepath)
 class(my_rast)
@@ -983,31 +978,32 @@ class(my_rast)
 Typing the name of the raster into the console, will print out the raster header (dimensions, resolution, extent, CRS) and some additional information (class, data source, summary of the raster values): 
 
 
-```r
+``` r
 my_rast
-#> class       : SpatRaster 
-#> dimensions  : 457, 465, 1  (nrow, ncol, nlyr)
-#> resolution  : 0.000833, 0.000833  (x, y)
-#> extent      : -113, -113, 37.1, 37.5  (xmin, xmax, ymin, ymax)
-#> coord. ref. : lon/lat WGS 84 (EPSG:4326) 
-#> source      : srtm.tif 
-#> name        : srtm 
-#> min value   : 1024 
+#> class       : SpatRaster
+#> size        : 457, 465, 1  (nrow, ncol, nlyr)
+#> resolution  : 0.0008333333, 0.0008333333  (x, y)
+#> extent      : -113.2396, -112.8521, 37.13208, 37.51292  (xmin, xmax, ymin, ymax)
+#> coord. ref. : lon/lat WGS 84 (EPSG:4326)
+#> source      : srtm.tif
+#> name        : srtm
+#> min value   : 1024
 #> max value   : 2892
 ```
 
-Dedicated functions report each component: `dim()` returns the number of rows, columns and layers; `ncell()` the number of cells (pixels); `res()` the spatial resolution; `ext()` its spatial extent; and `crs()` its coordinate reference system (raster reprojection is covered in Section \@ref(reproj-ras)).
+Dedicated functions report each component: `dim()` returns the number of rows, columns and layers; `ncell()` the number of cells (pixels); `res()` the spatial resolution; `ext()` its spatial extent; and `crs()` its CRS (raster reprojection is covered in Section \@ref(reproj-ras)).
 `inMemory()` reports whether the raster data is stored in memory or on disk, and `sources` specifies the file location.
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">`help("terra-package")` returns a full list of all available **terra** functions.</div>\EndKnitrBlock{rmdnote}
 
-### Basic map making {#basic-map-raster}
+### Basic map-making {#basic-map-raster}
 
 Similar to the **sf** package, **terra** also provides `plot()` methods for its own classes.
-\index{map making!basic raster}
+As shown in the following command, the `plot()` function creates a basic raster plot, resulting in Figure \@ref(fig:basic-new-raster-plot).
+\index{map-making!basic raster}
 
 
-```r
+``` r
 plot(my_rast)
 ```
 
@@ -1024,12 +1020,13 @@ There are several other approaches for plotting raster data in R that are outsid
 
 ### Raster classes {#raster-classes}
 
+\index{terra (package)}
 The `SpatRaster` class represents rasters object of **terra**.
 The easiest way to create a raster object in R is to read-in a raster file from disk or from a server (Section \@ref(raster-data-read)).
 \index{raster!class}
 
 
-```r
+``` r
 single_raster_file = system.file("raster/srtm.tif", package = "spDataLarge")
 single_rast = rast(raster_filepath)
 ```
@@ -1037,7 +1034,7 @@ single_rast = rast(raster_filepath)
 The **terra** package supports numerous drivers with the help of the GDAL library.
 Rasters from files are usually not read entirely into RAM, with an exception of their header and a pointer to the file itself.
 
-Rasters can also be created from scratch using the same `rast()` function.
+Rasters can also be created from scratch, using the same `rast()` function.
 This is illustrated in the subsequent code chunk, which results in a new `SpatRaster` object.
 The resulting raster consists of 36 cells (6 columns and 6 rows specified by `nrows` and `ncols`) centered around the Prime Meridian and the Equator (see `xmin`, `xmax`, `ymin` and `ymax` parameters).
 Values (`vals`) are assigned to each cell: 1 to cell 1, 2 to cell 2, and so on.
@@ -1045,7 +1042,7 @@ Remember: `rast()` fills cells row-wise (unlike `matrix()`) starting at the uppe
 For other ways of creating raster objects, see `?rast`.
 
 
-```r
+``` r
 new_raster = rast(nrows = 6, ncols = 6, 
                   xmin = -1.5, xmax = 1.5, ymin = -1.5, ymax = 1.5,
                   vals = 1:36)
@@ -1056,38 +1053,38 @@ The unit of the resolution is that of the underlying CRS.
 Here, it is degrees, because the default CRS of raster objects is WGS84.
 However, one can specify any other CRS with the `crs` argument.
 
-The `SpatRaster` class also handles multiple layers, which typically correspond to a single multispectral satellite file or a time-series of rasters.
+The `SpatRaster` class also handles multiple layers, which typically correspond to a single multi-spectral satellite file or a time-series of rasters.
 
 
-```r
+``` r
 multi_raster_file = system.file("raster/landsat.tif", package = "spDataLarge")
 multi_rast = rast(multi_raster_file)
 multi_rast
-#> class       : SpatRaster 
-#> dimensions  : 1428, 1128, 4  (nrow, ncol, nlyr)
+#> class       : SpatRaster
+#> size        : 1428, 1128, 4  (nrow, ncol, nlyr)
 #> resolution  : 30, 30  (x, y)
 #> extent      : 301905, 335745, 4111245, 4154085  (xmin, xmax, ymin, ymax)
-#> coord. ref. : WGS 84 / UTM zone 12N (EPSG:32612) 
-#> source      : landsat.tif 
-#> names       : landsat_1, landsat_2, landsat_3, landsat_4 
-#> min values  :      7550,      6404,      5678,      5252 
+#> coord. ref. : WGS 84 / UTM zone 12N (EPSG:32612)
+#> source      : landsat.tif
+#> names       : landsat_1, landsat_2, landsat_3, landsat_4
+#> min values  :      7550,      6404,      5678,      5252
 #> max values  :     19071,     22051,     25780,     31961
 ```
 
 `nlyr()` retrieves the number of layers stored in a `SpatRaster` object:
 
 
-```r
+``` r
 nlyr(multi_rast)
 #> [1] 4
 ```
 
-For multilayer raster objects, layers can be selected with the `[[` and `$` operators, for example with commands `multi_rast[["landsat_1"]]` and `multi_rast$landsat_1`.
+For multi-layer raster objects, layers can be selected with the `[[` and `$` operators, for example with commands `multi_rast[["landsat_1"]]` and `multi_rast$landsat_1`.
 The `terra::subset()` can also be used to select layers.
 It accepts a layer number or its name as the second argument:
 
 
-```r
+``` r
 multi_rast3 = subset(multi_rast, 3)
 multi_rast4 = subset(multi_rast, "landsat_4")
 ```
@@ -1095,7 +1092,7 @@ multi_rast4 = subset(multi_rast, "landsat_4")
 The opposite operation, combining several `SpatRaster` objects into one, can be done using the `c` function:
 
 
-```r
+``` r
 multi_rast34 = c(multi_rast3, multi_rast4)
 ```
 
@@ -1111,22 +1108,22 @@ In these cases, there are two main possible solutions: (1) use of the `wrap()` f
 
 \index{CRS!introduction}
 Vector and raster spatial data types share concepts intrinsic to spatial data.
-Perhaps the most fundamental of these is the Coordinate Reference System (CRS), which defines how the spatial elements of the data relate to the surface of the Earth (or other bodies).
+Perhaps the most fundamental of these is the coordinate reference systems (CRSs), which defines how the spatial elements of the data relate to the surface of the Earth (or other bodies).
 CRSs are either geographic or projected, as introduced at the beginning of this chapter (see Figure \@ref(fig:vectorplots)).
 This section explains each type, laying the foundations for Chapter \@ref(reproj-geo-data), which provides a deep dive into setting, transforming and querying CRSs.
 
 ### Geographic coordinate reference systems
 
 \index{CRS!geographic}
-Geographic coordinate reference systems identify any location on the Earth's surface using two values --- longitude and latitude (Figure \@ref(fig:vector-crs), left panel). 
+Geographic CRSs identify any location on the Earth's surface using two values --- longitude and latitude (Figure \@ref(fig:vector-crs), left panel). 
 *Longitude* is location in the East-West direction in angular distance from the Prime Meridian plane.
 *Latitude* is angular distance North or South of the equatorial plane.
 Distances in geographic CRSs are therefore not measured in meters.
 This has important consequences, as demonstrated in Section \@ref(reproj-geo-data).
 
-The surface of the Earth in geographic coordinate reference systems is represented by a spherical or ellipsoidal surface.
+The surface of the Earth in geographic CRSs is represented by a spherical or ellipsoidal surface.
 Spherical models assume that the Earth is a perfect sphere of a given radius -- they have the advantage of simplicity but, at the same time, they are inaccurate as the Earth is not exactly a sphere.
-Ellipsoidal models are slighly more accurate, and are defined by two parameters: the equatorial radius and the polar radius.
+Ellipsoidal models are slightly more accurate, and are defined by two parameters: the equatorial radius and the polar radius.
 These are suitable because the Earth is compressed: the equatorial radius is around 11.5 km longer than the polar radius [@maling_coordinate_1992].^[
 The degree of compression is often referred to as *flattening*, defined in terms of the equatorial radius ($a$) and polar radius ($b$) as follows: $f = (a - b) / a$. The terms *ellipticity* and *compression* can also be used.
 Because $f$ is a rather small value, digital ellipsoid models use the 'inverse flattening' ($rf = 1/f$) to define the Earth's compression.
@@ -1141,12 +1138,12 @@ Black lines represent a *geocentric datum*, whose center is located in the Earth
 In a *local datum*, shown as a purple dashed line, the ellipsoidal surface is shifted to align with the surface at a particular location.
 These allow local variations in Earth's surface, for example due to large mountain ranges, to be accounted for in a local CRS.
 This can be seen in Figure \@ref(fig:datum-fig), where the local datum is fitted to the area of Philippines, but is misaligned with most of the rest of the planet's surface. 
-Both datums in Figure \@ref(fig:datum-fig) are put on top of a geoid - a model of global mean sea level.^[Please note that the geoid on the Figure exaggerates the bumpy surface of the geoid by a factor of 10,000 to highlight the irregular shape of the planet.]
+Both datums in Figure \@ref(fig:datum-fig) are put on top of a geoid --- a model of global mean sea level.^[Note that the geoid in Figure \@ref(fig:datum-fig) is exaggerated by a factor of 10,000 to highlight the irregular shape of the planet.]
 
 (ref:datum-fig) Geocentric and local geodetic datums shown on top of a geoid (in false color and the vertical exaggeration by 10,000 scale factor). Image of the geoid is adapted from the work of @essd-11-647-2019.
 
 <div class="figure" style="text-align: center">
-<img src="figures/02_datum_fig.png" alt="(ref:datum-fig)" width="100%" />
+<img src="images/02_datum_fig.png" alt="(ref:datum-fig)" width="100%" />
 <p class="caption">(\#fig:datum-fig)(ref:datum-fig)</p>
 </div>
 
@@ -1162,7 +1159,7 @@ Therefore, some properties of the Earth's surface are distorted in this process,
 A projected coordinate reference system can preserve only one or two of those properties.
 Projections are often named based on a property they preserve: equal-area preserves area, azimuthal preserve direction, equidistant preserve distance, and conformal preserve local shape.
 
-There are three main groups of projection types - conic, cylindrical, and planar (azimuthal).
+There are three main groups of projection types: conic, cylindrical, and planar (azimuthal).
 In a conic projection, the Earth's surface is projected onto a cone along a single line of tangency or two lines of tangency. 
 Distortions are minimized along the tangency lines and rise with the distance from those lines in this projection.
 Therefore, it is the best suited for maps of mid-latitude areas.
@@ -1178,11 +1175,11 @@ We will expand on CRSs and explain how to project from one CRS to another in Cha
 For now, it is sufficient to know:
 
 - That coordinate systems are a key component of geographic objects
-- Knowing which CRS your data is in, and whether it is in geographic (lon/lat) or projected (typically meters), is important and has consequences for how R handles spatial and geometry operations
-- CRSs of `sf` objects can be queried with the function `st_crs()`, CRSs of `terra` objects can be queried with the function `crs()`
+- Which CRS your data is in, and whether it is in geographic (lon/lat) or projected (typically meters), is important and has consequences for how R handles spatial and geometry operations
+- That CRSs of `sf` objects can be queried with the function `st_crs()` and CRSs of `terra` objects can be queried with the function `crs()`
 
 <div class="figure" style="text-align: center">
-<img src="figures/02_vector_crs.png" alt="Examples of geographic (WGS 84; left) and projected (NAD83 / UTM zone 12N; right) coordinate systems for a vector data type." width="100%" />
+<img src="images/02_vector_crs.png" alt="Examples of geographic (WGS 84; left) and projected (NAD83 / UTM zone 12N; right) coordinate systems for a vector data type." width="100%" />
 <p class="caption">(\#fig:vector-crs)Examples of geographic (WGS 84; left) and projected (NAD83 / UTM zone 12N; right) coordinate systems for a vector data type.</p>
 </div>
 
@@ -1191,7 +1188,7 @@ For now, it is sufficient to know:
 An important feature of CRSs is that they contain information about spatial units.
 Clearly, it is vital to know whether a house's measurements are in feet or meters, and the same applies to maps.
 It is good cartographic practice to add a *scale bar* or some other distance indicator onto maps to demonstrate the relationship between distances on the page or screen and distances on the ground.
-Likewise, it is important to formally specify the units in which the geometry data or cells are measured to provide context, and ensure that subsequent calculations are done in context.
+Likewise, it is important to formally specify the units in which the geometry data or cells are measured to provide context, and to ensure that subsequent calculations are done in context.
 
 A novel feature of geometry data in `sf` objects is that they have *native support* for units.
 This means that distance, area and other geometric calculations in **sf** return values that come with a `units` attribute, defined by the **units** package [@pebesma_measurement_2016].
@@ -1201,12 +1198,12 @@ This is demonstrated in the code chunk below, which calculates the area of Luxem
 \index{sf!units}
 
 
-```r
+``` r
 luxembourg = world[world$name_long == "Luxembourg", ]
 ```
 
 
-```r
+``` r
 st_area(luxembourg) # requires the s2 package in recent versions of sf
 #> 2.41e+09 [m^2]
 ```
@@ -1218,7 +1215,7 @@ To take the Luxembourg example, if the units remained unspecified, one could inc
 To translate the huge number into a more digestible size, it is tempting to divide the results by a million (the number of square meters in a square kilometer):
 
 
-```r
+``` r
 st_area(luxembourg) / 1000000
 #> 2409 [m^2]
 ```
@@ -1227,7 +1224,7 @@ However, the result is incorrectly given again as square meters.
 The solution is to set the correct units with the **units** package:
 
 
-```r
+``` r
 units::set_units(st_area(luxembourg), km^2)
 #> 2409 [km^2]
 ```
@@ -1235,18 +1232,18 @@ units::set_units(st_area(luxembourg), km^2)
 Units are of equal importance in the case of raster data.
 However, so far **sf** is the only spatial package that supports units, meaning that people working on raster data should approach changes in the units of analysis (for example, converting pixel widths from imperial to decimal units) with care.
 The `my_rast` object (see above) uses a WGS84 projection with decimal degrees as units.
-Consequently, its resolution is also given in decimal degrees but you have to know it, since the `res()` function simply returns a numeric vector.
+Consequently, its resolution is also given in decimal degrees, but you have to know it, since the `res()` function simply returns a numeric vector.
 
 
-```r
+``` r
 res(my_rast)
 #> [1] 0.000833 0.000833
 ```
 
-If we used the UTM projection, the units would change.
+If we used the Universal Transverse Mercator (UTM) projection, the units would change.
 
 
-```r
+``` r
 repr = project(my_rast, "EPSG:26912")
 res(repr)
 #> [1] 83.5 83.5
@@ -1265,7 +1262,7 @@ E1. Use `summary()` on the geometry column of the `world` data object that is in
     
 
 
-E2. Run the code that 'generated' the map of the world in Section 2.2.3 (Basic map making).
+E2. Run the code that 'generated' the map of the world in Section 2.2.3 (Basic map-making).
 Find two similarities and two differences between the image on your computer and that in the book.
 
 - What does the `cex` argument do (see `?plot`)?

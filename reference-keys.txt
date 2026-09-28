@@ -149,10 +149,11 @@ fig:rf-pred
 fig:16-synthesis-reprex
 intro
 what-is-geocomputation
+why-open-source
 why-use-r-for-geocomputation
 software-for-geocomputation
 r-ecosystem
-the-history-of-r-spatial
+history-of-r-spatial
 exercises
 spatial-class
 intro-spatial-class
@@ -168,7 +169,7 @@ sfheaders
 s2
 raster-data
 r-packages-for-working-with-raster-data
-an-introduction-to-terra
+introduction-to-terra
 basic-map-raster
 raster-classes
 crs-intro
@@ -330,7 +331,7 @@ tidy-the-input-data
 create-census-rasters
 define-metropolitan-areas
 points-of-interest
-identifying-suitable-locations
+identify-suitable-locations
 discussion-and-next-steps
 exercises-10
 eco
